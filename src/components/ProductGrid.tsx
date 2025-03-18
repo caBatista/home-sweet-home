@@ -29,9 +29,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, searchTerm }) => {
     fetchProducts();
   }, [category, searchTerm]);
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = Array.isArray(products)
+    ? products.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
   if (loading) {
     return <p>Loading...</p>;
