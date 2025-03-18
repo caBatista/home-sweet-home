@@ -1,10 +1,9 @@
 import { Button } from "@components/components/ui/button";
 import { Card, CardContent, CardTitle } from "@components/components/ui/card";
 import Header from "@components/Header";
-import Layout from "@components/Layout";
 import { GetServerSideProps } from "next";
 import React, { useState } from "react";
-import { useCart } from "@contexts/cart-context"; // Import the useCart hook
+import { useCart } from "@contexts/cart-context";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params!;
@@ -30,19 +29,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const ProductDetailPage: React.FC<{ product: any }> = ({ product }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  // const { addToCart } = useCart();
+  const { addToCart } = useCart();
 
   if (!product) {
     return <div>Product not found</div>;
   }
 
   const handleAddToCart = () => {
-    // addToCart(product);
-    console.log("Missing addToCart function");
+    addToCart(product);
   };
 
   return (
-    <Layout>
+    <>
       <Header onSearchTermChange={setSearchTerm} />
       <div className="container mx-auto mt-10">
         <Card className="product-card">
@@ -62,7 +60,10 @@ const ProductDetailPage: React.FC<{ product: any }> = ({ product }) => {
                 </p>
                 <p className="mb-4">{product.description}</p>
                 <p className="text-sm text-gray-500 mb-4"></p>
-                <Button className="mt-4 mb-10" onClick={handleAddToCart}>
+                <Button
+                  className="mt-4 mb-10 add-to-cart-button"
+                  onClick={handleAddToCart}
+                >
                   Adicionar ao carrinho
                 </Button>
               </div>
@@ -70,7 +71,7 @@ const ProductDetailPage: React.FC<{ product: any }> = ({ product }) => {
           </CardContent>
         </Card>
       </div>
-    </Layout>
+    </>
   );
 };
 
