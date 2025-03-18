@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { ThemeProvider } from "../contexts/theme-context";
 import { GeistSans } from "geist/font/sans";
 import { AppStateProvider } from "../contexts/app-state-context";
-import Header from "./Header";
+import { CartProvider } from "@contexts/cart-context";
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,7 +18,7 @@ function Layout({ children }: LayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <CartProvider>{children}</CartProvider>
         </ThemeProvider>
       </AppStateProvider>
     </div>

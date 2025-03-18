@@ -8,12 +8,20 @@ import {
 } from "@components/components/ui/card";
 import { Button } from "@components/components/ui/button";
 import Link from "next/link";
+import { useCart } from "@contexts/cart-context";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    addToCart(product);
+  };
+
   return (
     <Link href={`/products/${product.id}`}>
       <Card className="product-card hover:outline-2 hover:shadow-lg">
@@ -29,7 +37,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             />
           </div>
           <p className="text-lg font-bold">R${product.price.toFixed(2)}</p>
-          <Button className="mt-2">Detalhes</Button>
+          <Button className="mt-2" onClick={handleAddToCart}>
+            Adicionar ao carrinho
+          </Button>
         </CardContent>
       </Card>
     </Link>
