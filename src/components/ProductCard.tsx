@@ -1,5 +1,5 @@
 import React from "react";
-import { Product } from "@prisma/client";
+import { Product } from "types";
 import {
   Card,
   CardHeader,

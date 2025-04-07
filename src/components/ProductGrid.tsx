@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Product } from "@prisma/client";
+import { Product } from "types";
 import ProductCard from "./ProductCard";
 
 interface ProductGridProps {

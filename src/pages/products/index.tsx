@@ -1,3 +1,4 @@
+import React from "react";
 import { useRouter } from "next/router";
 import ProductGrid from "@components/ProductGrid";
 import { useState } from "react";

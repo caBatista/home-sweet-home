@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useCart } from "../contexts/cart-context";
 import { Button } from "./components/ui/button";
 import { X } from "lucide-react";
+import { Product } from "types";
 
 const Cart: React.FC = () => {
   const { cart, removeFromCart } = useCart();
@@ -24,12 +25,7 @@ const Cart: React.FC = () => {
         <ul className="divide-y divide-gray-200">
           {cart.map(
             (
-              product: {
-                imageUrl: string;
-                name: string;
-                price: number;
-                icon: string;
-              },
+              product: Product,
               index: number
             ) => (
               <li

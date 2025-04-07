@@ -10,7 +10,7 @@ async function handleGetByCategory(category: string, res: NextApiResponse) {
     });
     res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ error: `Failed to fetch products by category` });
+    res.status(500).json({ error: `Failed to fetch products by category: ${error}` });
   }
 }
 
@@ -25,7 +25,7 @@ async function handleGetById(id: number, res: NextApiResponse) {
       res.status(404).json({ error: `Product not found` });
     }
   } catch (error) {
-    res.status(500).json({ error: `Failed to fetch product by ID` });
+    res.status(500).json({ error: `Failed to fetch product by ID: ${error}` });
   }
 }
 

@@ -1,3 +1,4 @@
+import React from "react";
 import { ReactNode } from "react";
 import { ThemeProvider } from "../contexts/theme-context";
 import { GeistSans } from "geist/font/sans";

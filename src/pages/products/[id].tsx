@@ -4,6 +4,7 @@ import Header from "@components/Header";
 import { GetServerSideProps } from "next";
 import React, { useState } from "react";
 import { useCart } from "@contexts/cart-context";
+import { Product } from "types";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params!;
@@ -27,7 +28,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-const ProductDetailPage: React.FC<{ product: any }> = ({ product }) => {
+const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
   const { addToCart } = useCart();
 
@@ -36,7 +38,7 @@ const ProductDetailPage: React.FC<{ product: any }> = ({ product }) => {
   }
 
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart(product as Product);
   };
 
   return (
