@@ -1,5 +1,6 @@
 import React from "react";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import "../styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -21,9 +22,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   return (
-    <Layout>
-      <Component {...pageProps} />;
-    </Layout>
+    <>
+      <Head>
+        <title>Projeto Casa Nova</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </>
   );
 }
 
