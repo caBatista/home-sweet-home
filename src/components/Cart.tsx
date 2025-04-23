@@ -16,6 +16,37 @@ const Cart: React.FC = () => {
     return null;
   }
 
+  function handleCheckout(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    event.preventDefault();
+    if (cart.length === 0) {
+      alert("Seu carrinho está vazio.");
+      return;
+    }
+
+    const checkoutItems = cart.map(product => ({
+      title: product.name,
+      unit_price: product.price,
+      quantity: 1
+    }));
+
+    fetch("/api/checkout", {
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json"
+      },
+      body: JSON.stringify(checkoutItems)
+    })
+    .then(res => res.json())
+    .then(data => {
+      const preference = data;
+      console.log(preference);
+      window.location.href = preference.init_point;
+    })
+    .catch(error => {
+    console.error("Erro ao criar checkout:", error);
+    });
+
+  }
   return (
     <div className="cart bg-background shadow-lg rounded-lg p-6">
       <h2 className="text-2xl font-bold mb-6 text-foreground">Seu Carrinho</h2>
@@ -56,7 +87,7 @@ const Cart: React.FC = () => {
           )}
         </ul>
       )}
-      <Button className="mt-2 w-full">Proceder para o pagamento</Button>
+      <Button className="mt-2 w-full" onClick={handleCheckout}>Proceder para o pagamento</Button>
     </div>
   );
 };
