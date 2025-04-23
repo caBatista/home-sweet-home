@@ -8,7 +8,8 @@ import { Product } from "types";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params!;
-  const url = `http://localhost:3000/api/products/${id}`;
+  const baseUrl = process.env.NEXT_PUBLIC_URL;
+  const url = `${baseUrl}/api/products/${id}`;
   const res = await fetch(url);
   const product = await res.json();
 
