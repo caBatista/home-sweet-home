@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCart } from "../contexts/cart-context";
-import { Button } from "./components/ui/button";
+import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { Product } from "types";
 import {
@@ -11,7 +11,7 @@ import {
   SheetClose,
   SheetFooter,
   SheetDescription,
-} from "./components/ui/sheet";
+} from "./ui/sheet";
 
 interface CartProps {
   open: boolean;

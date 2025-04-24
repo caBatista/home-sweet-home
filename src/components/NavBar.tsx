@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Input } from "./components/ui/input";
+import { Input } from "./ui/input";
 import { ProductCategories } from "types";
 import { useRouter } from "next/router";
 

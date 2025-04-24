@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Product } from "types";
 import ProductCard from "./ProductCard";
-import { Skeleton } from "./components/ui/skeleton";
-import { Card, CardHeader, CardContent } from "@components/components/ui/card";
+import { Skeleton } from "./ui/skeleton";
+import { Card, CardHeader, CardContent } from "@components/ui/card";
 
 interface ProductGridProps {
   category?: string;

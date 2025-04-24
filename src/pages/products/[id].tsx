@@ -1,5 +1,5 @@
-import { Button } from "@components/components/ui/button";
-import { Card, CardContent, CardTitle } from "@components/components/ui/card";
+import { Button } from "@components/ui/button";
+import { Card, CardContent, CardTitle } from "@components/ui/card";
 import Header from "@components/Header";
 import { GetServerSideProps } from "next";
 import React, { useState } from "react";

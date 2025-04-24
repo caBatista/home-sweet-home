@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import Link from "next/link"
-import { Button } from "@components/components/ui/button"
+import { Button } from "@components/ui/button"
 import { useCart } from "../../contexts/cart-context"
 
 const SuccessPage: React.FC = () => {
