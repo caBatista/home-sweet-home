@@ -4,6 +4,7 @@ import { ThemeProvider } from "../contexts/theme-context";
 import { GeistSans } from "geist/font/sans";
 import { AppStateProvider } from "../contexts/app-state-context";
 import { CartProvider } from "@contexts/cart-context";
+import { Toaster } from "react-hot-toast";
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,7 +20,10 @@ function Layout({ children }: LayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            <Toaster position="top-center" />
+            {children}
+          </CartProvider>
         </ThemeProvider>
       </AppStateProvider>
     </div>

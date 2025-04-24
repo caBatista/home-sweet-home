@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { Product } from "types";
+import { toast } from "react-hot-toast";
 
 interface CartContextType {
   cart: Product[];
@@ -24,7 +25,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (product: Product) => {
     setCart((prevCart) => [...prevCart, product]);
-    window.alert("Produto adicionado ao carrinho");
+    toast.success("Produto adicionado ao carrinho");
   };
 
   const removeFromCart = (index: number) => {
