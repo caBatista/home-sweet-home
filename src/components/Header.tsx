@@ -4,17 +4,18 @@ import icon from "assets/icon.jpeg";
 import { ModeToggle } from "./ModeToggle";
 import { ProductCategories } from "types";
 import { Menu, ShoppingCart } from "lucide-react";
-import { Button } from "./components/ui/button";
+import { Button } from "./ui/button";
 import NavBar from "./NavBar";
 import Cart from "./Cart";
 import { useCart } from "../contexts/cart-context";
-import { Sheet, SheetContent, SheetClose, SheetHeader, SheetTitle, SheetDescription } from "./components/ui/sheet";
+import { Sheet, SheetContent, SheetClose, SheetHeader, SheetTitle, SheetDescription } from "./ui/sheet";
 
 interface HeaderProps {
   onSearchTermChange: (term: string) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
+  const menuContentRef = useRef<HTMLDivElement>(null);
   const { cart } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -92,8 +93,12 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
         <SheetContent
           side="left"
           className="md:hidden"
-          onOpenAutoFocus={(event) => event.preventDefault()}
+          onOpenAutoFocus={(event) => {
+            event.preventDefault();
+            menuContentRef.current?.focus();
+          }}
         >
+          <div ref={menuContentRef} tabIndex={-1} />
           <SheetHeader className="mb-6">
             <SheetTitle>Menu</SheetTitle>
             <SheetDescription className="sr-only">
