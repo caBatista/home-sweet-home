@@ -7,7 +7,7 @@ import { Menu, ShoppingCart } from "lucide-react";
 import { Button } from "./components/ui/button";
 import NavBar from "./NavBar";
 import Cart from "./Cart";
-import { useCart } from "../contexts/cart-context"; // Import the useCart hook
+import { useCart } from "../contexts/cart-context";
 
 interface HeaderProps {
   onSearchTermChange: (term: string) => void;
@@ -15,8 +15,8 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false); // State to manage cart visibility
-  const { cart } = useCart(); // Get the cart state from the context
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { cart } = useCart();
 
   const formatKey = (key: string) => {
     return key.charAt(0) + key.slice(1).toLowerCase();
@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
 
         <div className="flex items-center space-x-4">
           <ModeToggle />
-          <Button variant="outline" size="icon" onClick={toggleCart}>
+          <Button variant="outline" size="icon" onClick={toggleCart} className="relative">
             <span className="sr-only">View Cart</span>
             <ShoppingCart />
             {cart.length > 0 && (
@@ -100,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
           </div>
         </div>
       )}
-      {isCartOpen && <Cart />}{" "}
+      <Cart open={isCartOpen} onClose={toggleCart} />
     </header>
   );
 };
