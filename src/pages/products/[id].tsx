@@ -53,7 +53,7 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
                 <img
                   src={product.imageUrl}
                   alt={product.name}
-                  className="w-64 h-64 object-cover mb-4 rounded-xl"
+                  className="w-64 h-64 object-cover mb-10 rounded-xl"
                 />
               </div>
               <div className="md:w-1/2 md:pl-8">
