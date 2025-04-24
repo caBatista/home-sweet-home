@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import icon from "assets/icon.jpeg";
 import { ModeToggle } from "./ModeToggle";
@@ -14,9 +14,20 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
+  const { cart } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { cart } = useCart();
+  const [animateBadge, setAnimateBadge] = useState(false);
+  const prevCountRef = useRef(cart.length);
+
+  useEffect(() => {
+    if (cart.length > prevCountRef.current) {
+      setAnimateBadge(true);
+      setTimeout(() => setAnimateBadge(false), 300);
+    }
+    prevCountRef.current = cart.length;
+  }, [cart.length]);
+  
 
   const formatKey = (key: string) => {
     return key.charAt(0) + key.slice(1).toLowerCase();
@@ -68,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
             <span className="sr-only">View Cart</span>
             <ShoppingCart />
             {cart.length > 0 && (
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+              <span className={`absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full ${animateBadge ? 'animate-ping' : ''}`}>
                 {cart.length}
               </span>
             )}
