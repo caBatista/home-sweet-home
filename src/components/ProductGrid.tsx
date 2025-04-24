@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Product } from "types";
 import ProductCard from "./ProductCard";
+import { Skeleton } from "./components/ui/skeleton";
+import { Card, CardHeader, CardContent } from "@components/components/ui/card";
 
 interface ProductGridProps {
   category?: string;
@@ -19,6 +21,17 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, searchTerm }) => {
         const res = await fetch(url);
         const data = await res.json();
         setProducts(data);
+
+        await Promise.all(
+          data.map((p: { imageUrl: string; }) =>
+            new Promise<void>((resolve) => {
+              const img = new Image()
+              img.src = p.imageUrl
+              img.onload = () => resolve()
+              img.onerror = () => resolve()
+            })
+          )
+        );
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {
@@ -36,7 +49,22 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, searchTerm }) => {
     : [];
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="ml-10 mr-10 mt-10 mb-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 8 }).map((_, idx) => (
+          <Card key={idx} className="product-card">
+            <CardHeader>
+              <Skeleton className="h-6 w-32" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="w-full h-48 mb-4 rounded-xl" />
+              <Skeleton className="h-4 w-20 mb-2" />
+              <Skeleton className="h-8 w-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    )
   }
 
   return (
