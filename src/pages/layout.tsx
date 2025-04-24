@@ -1,3 +1,4 @@
+import Footer from "@components/Footer";
 import React from "react";
 import { ReactNode } from "react";
 import { ThemeProvider } from "../contexts/theme-context";
@@ -6,13 +7,9 @@ import { AppStateProvider } from "../contexts/app-state-context";
 import { CartProvider } from "@contexts/cart-context";
 import { Toaster } from "react-hot-toast";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-function Layout({ children }: LayoutProps) {
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className={`${GeistSans.className} bg-background min-h-screen`}>
+    <div className="flex flex-col min-h-screen">
       <AppStateProvider>
         <ThemeProvider
           attribute="class"
@@ -22,12 +19,13 @@ function Layout({ children }: LayoutProps) {
         >
           <CartProvider>
             <Toaster position="top-center" />
-            {children}
+            <main className="flex-grow">{children}</main>
+            <Footer />
           </CartProvider>
         </ThemeProvider>
       </AppStateProvider>
     </div>
   );
-}
+};
 
 export default Layout;
