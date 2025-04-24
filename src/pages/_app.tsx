@@ -4,7 +4,7 @@ import Head from "next/head";
 import "../styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import Layout from "@components/Layout";
+import Layout from "pages/layout";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

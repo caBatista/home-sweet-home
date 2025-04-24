@@ -33,7 +33,7 @@
     "**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts",
-    "src/components/Layout.tsx"
+    "src/pages/layout.tsx"
   ],
   "exclude": ["node_modules"]
 }
