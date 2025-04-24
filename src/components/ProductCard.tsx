@@ -24,7 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <Link href={`/products/${product.id}`}>
-      <Card className="product-card hover:outline-2 hover:shadow-lg">
+      <Card className="product-card hover:outline-2 hover:shadow-lg min-w-3xs">
         <CardHeader>
           <CardTitle>{product.name}</CardTitle>
         </CardHeader>
