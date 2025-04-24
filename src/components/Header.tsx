@@ -8,7 +8,7 @@ import { Button } from "./components/ui/button";
 import NavBar from "./NavBar";
 import Cart from "./Cart";
 import { useCart } from "../contexts/cart-context";
-import { Sheet, SheetContent, SheetClose, SheetHeader, SheetTitle } from "./components/ui/sheet";
+import { Sheet, SheetContent, SheetClose, SheetHeader, SheetTitle, SheetDescription } from "./components/ui/sheet";
 
 interface HeaderProps {
   onSearchTermChange: (term: string) => void;
@@ -96,6 +96,9 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
         >
           <SheetHeader className="mb-6">
             <SheetTitle>Menu</SheetTitle>
+            <SheetDescription className="sr-only">
+              Navegação mobile
+            </SheetDescription>
           </SheetHeader>
           <div className="flex flex-col text-foreground space-y-4 p-4">
             {Object.keys(ProductCategories).map((key) => (

@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetClose,
   SheetFooter,
+  SheetDescription,
 } from "./components/ui/sheet";
 
 interface CartProps {
@@ -65,6 +66,9 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
       <SheetContent className="w-[350px] sm:w-[450px]">
         <SheetHeader className="mb-6">
           <SheetTitle>Seu Carrinho</SheetTitle>
+          <SheetDescription className="sr-only">
+            Itens no carrinho
+          </SheetDescription>
         </SheetHeader>
         
         {cart.length === 0 ? (
