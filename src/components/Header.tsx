@@ -8,6 +8,7 @@ import { Button } from "./components/ui/button";
 import NavBar from "./NavBar";
 import Cart from "./Cart";
 import { useCart } from "../contexts/cart-context";
+import { Sheet, SheetContent, SheetClose, SheetHeader, SheetTitle } from "./components/ui/sheet";
 
 interface HeaderProps {
   onSearchTermChange: (term: string) => void;
@@ -86,31 +87,43 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
           </Button>
         </div>
       </nav>
-      {isMobileMenuOpen && (
-        <div className="md:hidden">
-          <div className="flex flex-col space-y-4 p-4">
+
+      <Sheet open={isMobileMenuOpen} onOpenChange={toggleMobileMenu}>
+        <SheetContent
+          side="left"
+          className="md:hidden"
+          onOpenAutoFocus={(event) => event.preventDefault()}
+        >
+          <SheetHeader className="mb-6">
+            <SheetTitle>Menu</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col text-foreground space-y-4 p-4">
             {Object.keys(ProductCategories).map((key) => (
-              <Link
-                key={key}
-                href={`/products${
-                  key === "TODOS"
-                    ? ""
-                    : `?category=${
-                        ProductCategories[key as keyof typeof ProductCategories]
-                      }`
-                }`}
-                passHref
-                onClick={closeMobileMenu}
-              >
-                {formatKey(key)}
-              </Link>
+              <SheetClose asChild key={key}>
+                <Link
+                  href={`/products${
+                    key === "TODOS"
+                      ? ""
+                      : `?category=${
+                          ProductCategories[key as keyof typeof ProductCategories]
+                        }`
+                  }`}
+                  passHref
+                  onClick={closeMobileMenu}
+                >
+                  {formatKey(key)}
+                </Link>
+              </SheetClose>
             ))}
-            <Link href="/donate" passHref onClick={closeMobileMenu}>
-              Doar
-            </Link>
+            <SheetClose asChild>
+              <Link href="/donate" passHref onClick={closeMobileMenu}>
+                Doar
+              </Link>
+            </SheetClose>
           </div>
-        </div>
-      )}
+        </SheetContent>
+      </Sheet>
+
       <Cart open={isCartOpen} onClose={toggleCart} />
     </header>
   );
