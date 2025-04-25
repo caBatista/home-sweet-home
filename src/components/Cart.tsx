@@ -47,11 +47,14 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
       body: JSON.stringify(checkoutItems)
     })
     .then(res => res.json())
-    .then(data => {
-      const preference = data;
-      console.log(preference);
-      window.location.href = preference.init_point;
-    })
+  .then(data => {
+    if (data && data.init_point) {
+      window.location.href = data.init_point;
+    } else {
+      console.error("Invalid response format:", data);
+      alert("Erro ao processar pagamento. Por favor, tente novamente.");
+    }
+  })
     .catch(error => {
     console.error("Erro ao criar checkout:", error);
     });

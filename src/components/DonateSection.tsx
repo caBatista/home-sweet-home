@@ -25,14 +25,14 @@ const DonateSection: React.FC = () => {
     })
     .then(res => res.json())
     .then(data => {
-      const preference = data;
-      if(preference){
-        window.location.href = preference.init_point;
+      if (data && data.init_point) {
+        window.location.href = data.init_point;
       } else {
-        console.log('Erro pegando preferencia');
+        console.error("Invalid response format:", data);
+        alert("Erro ao processar pagamento. Por favor, tente novamente.");
       }
     })
-    .catch(error => {
+        .catch(error => {
     console.error("Erro ao criar checkout:", error);
     });
   }
