@@ -13,7 +13,7 @@ const SuccessPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4">
       <h1 className="text-3xl font-bold mb-2">Compra realizada com sucesso!</h1>
-      <p className="text-lg mb-6">
+      <p className="text-lg mb-6 mt-10 flex items-center justify-center text-center">
         Muito obrigado por escolher produtos para o nosso enxoval de casa nova! Sua ajuda torna nosso lar ainda mais acolhedor.
       </p>
       <Link href="/" passHref>
