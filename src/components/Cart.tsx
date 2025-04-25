@@ -34,6 +34,7 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
     }
 
     const checkoutItems = cart.map(product => ({
+      id: product.id,
       title: product.name,
       unit_price: product.price,
       quantity: 1
@@ -47,16 +48,16 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
       body: JSON.stringify(checkoutItems)
     })
     .then(res => res.json())
-  .then(data => {
-    if (data && data.init_point) {
-      window.location.href = data.init_point;
-    } else {
-      console.error("Invalid response format:", data);
-      alert("Erro ao processar pagamento. Por favor, tente novamente.");
-    }
-  })
+    .then(data => {
+      if (data && data.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        console.error("Invalid response format:", data);
+        alert("Erro ao processar pagamento. Por favor, tente novamente.");
+      }
+    })
     .catch(error => {
-    console.error("Erro ao criar checkout:", error);
+      console.error("Erro ao criar checkout:", error);
     });
   }
 
