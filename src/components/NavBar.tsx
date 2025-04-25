@@ -44,9 +44,6 @@ const NavBar: React.FC<NavBarProps> = ({ onSearchTermChange }) => {
             <span className="hover:underline">{formatKey(key)}</span>
           </Link>
         ))}
-        <Link href="/donate" passHref>
-          <span className="hover:underline">Doar</span>
-        </Link>
         <div className="ml-20">
           <form onSubmit={handleSearchSubmit}>
             <Input

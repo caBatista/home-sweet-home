@@ -123,11 +123,6 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
                 </Link>
               </SheetClose>
             ))}
-            <SheetClose asChild>
-              <Link href="/donate" passHref onClick={closeMobileMenu}>
-                Doar
-              </Link>
-            </SheetClose>
           </div>
         </SheetContent>
       </Sheet>

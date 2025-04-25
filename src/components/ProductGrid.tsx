@@ -3,13 +3,22 @@ import { Product } from "types";
 import ProductCard from "./ProductCard";
 import { Skeleton } from "./ui/skeleton";
 import { Card, CardHeader, CardContent } from "@components/ui/card";
+import { useRouter } from "next/router";
+import DonateSection from "./DonateSection";
 
 interface ProductGridProps {
   category?: string;
   searchTerm: string;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({ category, searchTerm }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ searchTerm, category }) => {
+  const router = useRouter();
+  const { category: queryCategory } = router.query;
+
+  if (queryCategory === "donate") {
+    return <DonateSection />;
+  }
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 

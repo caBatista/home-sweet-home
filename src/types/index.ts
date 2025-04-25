@@ -25,4 +25,5 @@ export enum ProductCategories {
   LIMPEZA = "limpeza",
   LOUÇA = "louca",
   MOVEIS = "movel",
+  DOAR = "donate",
 }
