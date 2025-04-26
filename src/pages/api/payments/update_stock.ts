@@ -21,6 +21,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
+        const existingProcessedPayment = await prisma.processedPayment.findUnique({
+            where: {
+                externalReference: external_reference as string
+            }
+        });
+
+        if (existingProcessedPayment) {
+            return res.status(200).json({ message: 'Payment already processed' });
+        }
+
         const searchResult = await payment.search({
             options: {
                 criteria: "desc",
@@ -39,19 +49,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ error: 'No items found in payment' });
         }
 
-        for (const item of items) {
-            const id = parseInt(item.id);
-            await prisma.product.update({
-                where: { id },
-                data: {
-                    quantity: {
-                        decrement: item.quantity ? parseInt(item.quantity) : 1
+        // Use a transaction to ensure both the stock update and payment record creation happen together
+        await prisma.$transaction(async (prisma) => {
+            // Update stock for each item
+            for (const item of items) {
+                const id = parseInt(item.id);
+                await prisma.product.update({
+                    where: { id },
+                    data: {
+                        quantity: {
+                            decrement: item.quantity ? parseInt(item.quantity) : 1
+                        }
                     }
+                });
+            }
+
+            // Record that this payment has been processed
+            await prisma.processedPayment.create({
+                data: {
+                    externalReference: external_reference as string
                 }
             });
-        }
+        });
 
-        return res.status(200).json({ message: 'Items deleted successfully' });
+        return res.status(200).json({ message: 'Items updated successfully' });
     } catch (error: any) {
         console.error('Error updating stock:', error);
         return res.status(500).json({ error: error.message || 'Internal Server Error' });
