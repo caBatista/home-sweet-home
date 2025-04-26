@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 },
                 notification_url: `${baseUrl}/api/webhook/mercadopago`,
                 external_reference: externalReference,
-                auto_return: 'approved',
+                auto_return: 'all',
             },
         });
         res.status(200).json({ ...result, external_reference: externalReference });

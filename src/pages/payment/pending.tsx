@@ -30,7 +30,7 @@ const PendingPage: React.FC = () => {
           setPaymentStatus(data);
           if (data.status === 'approved') {
             clearCart();
-            router.push('/payment/success');
+            router.push(`/payment/success?external_reference=${external_reference}`);
           }
         }
       } catch (error) {
