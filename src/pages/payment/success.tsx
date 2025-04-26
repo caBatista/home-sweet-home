@@ -24,6 +24,7 @@ const SuccessPage: React.FC = () => {
         });
 
         if (!response.ok) {
+          console.error('Failed to update stock:', response.statusText);
           throw new Error('Failed to update stock');
         }
 
@@ -31,7 +32,6 @@ const SuccessPage: React.FC = () => {
         clearCart();
       } catch (error) {
         console.error('Error updating stock:', error);
-        setError('Houve um erro ao atualizar o estoque. Por favor, entre em contato conosco.');
       }
     };
 
@@ -43,9 +43,6 @@ const SuccessPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground text-center p-4">
       <h1 className="text-3xl font-bold mb-2">Compra realizada com sucesso!</h1>
-      {error && (
-        <p className="text-red-500 mb-4">{error}</p>
-      )}
       <p className="text-lg mb-6 mt-10 flex items-center justify-center text-center">
         Muito obrigado por escolher produtos para o nosso enxoval de casa nova! Sua ajuda torna nosso lar ainda mais acolhedor.
       </p>

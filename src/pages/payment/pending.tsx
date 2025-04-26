@@ -54,7 +54,12 @@ const PendingPage: React.FC = () => {
       return "Aguardando a confirmação do pagamento via PIX. Por favor, complete o pagamento usando o código PIX fornecido.";
     }
     
-    return "Seu pagamento está em processamento. Aguarde a confirmação.";
+    return (
+      <>
+        <Spinner className="w-6 h-6" />
+        Seu pagamento está em processamento. Aguarde a confirmação
+      </>
+    );
   };
 
   return (
@@ -63,7 +68,6 @@ const PendingPage: React.FC = () => {
       <p className="text-lg mb-6 mt-10 flex items-center justify-center text-center gap-3">
         {isLoading ? (
           <>
-            <Spinner className="w-6 h-6" />
             Verificando status do pagamento...
           </>
         ) : (
