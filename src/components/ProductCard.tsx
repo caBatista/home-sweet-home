@@ -25,8 +25,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Link href={`/products/${product.id}`}>
       <Card className="product-card hover:outline-2 hover:shadow-lg min-w-3xs">
-        <CardHeader>
-          <CardTitle>{product.name}</CardTitle>
+        <CardHeader className="h-[40px]">
+          <div className="flex items-center justify-center">
+            <CardTitle className="line-clamp-3 text-center">{product.name}</CardTitle>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex justify-center items-center">
