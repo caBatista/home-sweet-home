@@ -5,7 +5,7 @@ import { ThemeProvider } from "../contexts/theme-context";
 import { GeistSans } from "geist/font/sans";
 import { AppStateProvider } from "../contexts/app-state-context";
 import { CartProvider } from "@contexts/cart-context";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (

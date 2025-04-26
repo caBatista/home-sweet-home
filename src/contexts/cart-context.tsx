@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { Product } from "types";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 
 interface CartContextType {
   cart: Product[];
