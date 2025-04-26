@@ -41,8 +41,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         for (const item of items) {
             const id = parseInt(item.id);
-            await prisma.product.delete({
-                where: { id }
+            await prisma.product.update({
+                where: { id },
+                data: {
+                    quantity: {
+                        decrement: item.quantity ? parseInt(item.quantity) : 1
+                    }
+                }
             });
         }
 
