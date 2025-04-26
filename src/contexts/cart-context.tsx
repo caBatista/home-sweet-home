@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { Product } from "types";
 import { toast } from "react-hot-toast";
 
@@ -23,6 +23,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  const updateLocalStorage = useCallback((newCart: Product[]) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("cart", JSON.stringify(newCart));
+    }
+  }, []);
+
   const addToCart = (product: Product) => {
     const currentQuantityInCart = cart.filter(item => item.id === product.id).length;
 
@@ -31,23 +37,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    setCart((prevCart) => [...prevCart, product]);
+    const newCart = [...cart, product];
+    setCart(newCart);
+    updateLocalStorage(newCart);
     toast.success("Produto adicionado ao carrinho");
   };
 
   const removeFromCart = (index: number) => {
-    setCart((prevCart) => prevCart.filter((_, i) => i !== index));
+    const newCart = cart.filter((_, i) => i !== index);
+    setCart(newCart);
+    updateLocalStorage(newCart);
   };
 
-  const clearCart = () => {
-    setCart([])
-  }
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
-  }, [cart]);
+  const clearCart = useCallback(() => {
+    setCart([]);
+    updateLocalStorage([]);
+  }, [updateLocalStorage]);
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
