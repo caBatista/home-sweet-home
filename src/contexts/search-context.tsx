@@ -1,14 +1,15 @@
+import { Product } from "@prisma/client";
 import React, { createContext, useState, useContext } from "react";
 
 interface SearchContextType {
-  searchResults: any[]; // Replace `any` with a more specific type if available
-  setSearchResults: (results: any[]) => void;
+  searchResults: Product[];
+  setSearchResults: (results: Product[]) => void;
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
 
   return (
     <SearchContext.Provider value={{ searchResults, setSearchResults }}>

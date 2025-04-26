@@ -31,7 +31,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(404).json({ error: 'Payment not found' });
         }
 
-        // Get the most recent payment for this external reference
         const latestPayment = searchResult.results[0];
         
         return res.status(200).json({
