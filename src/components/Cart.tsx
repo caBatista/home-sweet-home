@@ -123,7 +123,7 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
                   </span>
                 </div>
                 <Button className="w-full" onClick={handleCheckout}>
-                  Proceder para o pagamento
+                  Seguir para o pagamento
                 </Button>
               </div>
             </SheetFooter>
