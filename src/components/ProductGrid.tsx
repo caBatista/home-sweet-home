@@ -76,6 +76,43 @@ const ProductGrid: React.FC<ProductGridProps> = ({ searchTerm, category }) => {
     )
   }
 
+  if (filteredProducts.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[50vh] text-center px-4">
+        <div className="mb-6 text-muted-foreground">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="mx-auto mb-4"
+          >
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <h1 className="text-3xl font-bold mb- text-foreground text-center">
+            {searchTerm
+            ? `Nenhum produto encontrado para "${searchTerm}"`
+            : category
+            ? `Nenhum produto disponível na categoria ${category.charAt(0).toUpperCase() + category.slice(1)}`
+            : "Nenhum produto disponível no momento"}
+        </h1>
+        {!searchTerm && !category && (
+          <p className="text-lg mt-4 mb-8 text-muted-foreground text-center">
+              Que tal fazer uma doação? Selecione "Doar" nas categorias para doar qualquer quantia.
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="ml-10 mr-10 mt-10 mb-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {filteredProducts.map((product) => (
