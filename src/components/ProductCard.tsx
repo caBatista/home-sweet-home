@@ -31,14 +31,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <CardContent>
           <div className="flex justify-center items-center">
             <img
-              src={product.imageUrl}
+              src={product.imagesUrl[0]}
               alt={product.name}
               className="w-48 h-48 object-cover mb-4 rounded-xl"
             />
           </div>
-          <p className="text-lg font-bold">R${product.price.toFixed(2)}</p>
-          <Button className="mt-2" onClick={handleAddToCart}>
-            Adicionar ao carrinho
+          <p className="text-lg font-bold mb-2">R${product.price.toFixed(2)}</p>
+          <p className="text-sm text-gray-500 mb-2">
+            {product.quantity > 0 
+              ? `${product.quantity} disponíve${product.quantity > 1 ? 'is' : 'l'}`
+              : 'Produto indisponível'
+            }
+          </p>
+          <Button 
+            className="mt-2" 
+            onClick={handleAddToCart}
+            disabled={product.quantity === 0}
+          >
+            {product.quantity === 0 ? 'Indisponível' : 'Adicionar ao carrinho'}
           </Button>
         </CardContent>
       </Card>

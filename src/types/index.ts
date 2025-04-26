@@ -4,13 +4,9 @@ export interface Product {
   description: string;
   price: number;
   category: string;
-  imageUrl: string;
-}
-
-export interface Donation {
-  id: string;
-  amount: number;
-  message?: string;
+  imagesUrl: string[];
+  quantity: number;
+  url: string;
 }
 
 export interface User {
@@ -21,9 +17,10 @@ export interface User {
 
 export enum ProductCategories {
   TODOS = "",
-  ELETROS = "eletro",
-  LIMPEZA = "limpeza",
-  LOUÇA = "louca",
-  MOVEIS = "movel",
+  COZINHA = "cozinha",
+  LAVANDERIA = "lavanderia",
+  SALA = "sala",
+  QUARTO = "quarto",
+  BANHEIRO = "banheiro",
   DOAR = "donate",
 }

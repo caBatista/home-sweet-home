@@ -32,10 +32,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ searchTerm, category }) => {
         setProducts(data);
 
         await Promise.all(
-          data.map((p: { imageUrl: string; }) =>
+          data.map((p: Product) =>
             new Promise<void>((resolve) => {
               const img = new Image()
-              img.src = p.imageUrl
+              img.src = p.imagesUrl[0]
               img.onload = () => resolve()
               img.onerror = () => resolve()
             })

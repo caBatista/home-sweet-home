@@ -5,6 +5,13 @@ import { GetServerSideProps } from "next";
 import React, { useState } from "react";
 import { useCart } from "@contexts/cart-context";
 import { Product } from "types";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@components/ui/carousel";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params!;
@@ -22,7 +29,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             description: product.description,
             price: product.price,
             category: product.category,
-            imageUrl: product.imageUrl,
+            imagesUrl: product.imagesUrl,
+            quantity: product.quantity ?? 0,
           }
         : null,
     },
@@ -50,11 +58,21 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
           <CardContent>
             <div className="flex flex-col md:flex-row mt-10">
               <div className="flex justify-center items-center md:w-1/2">
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-64 h-64 object-cover mb-10 rounded-xl"
-                />
+                <Carousel className="w-64 mb-4">
+                  <CarouselContent>
+                    {product.imagesUrl.map((url, index) => (
+                      <CarouselItem key={index}>
+                        <img
+                          src={url}
+                          alt={`${product.name} - Image ${index + 1}`}
+                          className="w-64 h-64 object-cover rounded-xl"
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
               </div>
               <div className="md:w-1/2 md:pl-8">
                 <CardTitle className="text-4xl mb-4">{product.name}</CardTitle>
@@ -62,12 +80,18 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
                   R${product.price.toFixed(2)}
                 </p>
                 <p className="mb-4">{product.description}</p>
-                <p className="text-sm text-gray-500 mb-4"></p>
+                <p className="text-sm text-gray-500 mb-4">
+                  {product.quantity > 0 
+                    ? `${product.quantity} unidade${product.quantity > 1 ? 's' : ''} disponíve${product.quantity > 1 ? 'is' : 'l'}`
+                    : 'Produto indisponível'
+                  }
+                </p>
                 <Button
                   className="mt-4 mb-10 add-to-cart-button"
                   onClick={handleAddToCart}
+                  disabled={product.quantity === 0}
                 >
-                  Adicionar ao carrinho
+                  {product.quantity === 0 ? 'Indisponível' : 'Adicionar ao carrinho'}
                 </Button>
               </div>
             </div>

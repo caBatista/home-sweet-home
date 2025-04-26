@@ -24,6 +24,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const addToCart = (product: Product) => {
+    const currentQuantityInCart = cart.filter(item => item.id === product.id).length;
+
+    if (currentQuantityInCart >= product.quantity) {
+      toast.error("Quantidade máxima atingida para este produto");
+      return;
+    }
+
     setCart((prevCart) => [...prevCart, product]);
     toast.success("Produto adicionado ao carrinho");
   };

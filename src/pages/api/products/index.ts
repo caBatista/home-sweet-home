@@ -19,16 +19,18 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
-  const { name, description, price, category, imageUrl } = req.body;
+  const { name, description, price, category, imagesUrl, url, quantity } = req.body;
   try {
     const newProduct = await prisma.product.create({
       data: {
         name,
         description,
-        price,
+        price: parseFloat(price),
         category,
-        imageUrl,
+        imagesUrl,
+        url,
         active: true,
+        quantity: parseInt(quantity),
       },
     });
     res.status(201).json(newProduct);

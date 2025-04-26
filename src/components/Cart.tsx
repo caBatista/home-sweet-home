@@ -90,7 +90,7 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
                   <li key={index} className="py-4 flex justify-between items-center">
                     <div className="flex items-center">
                       <img
-                        src={product.imageUrl}
+                        src={product.imagesUrl[0]}
                         alt={product.name}
                         className="w-12 h-12 rounded-md object-cover ml-4 mr-4"
                       />
