@@ -79,7 +79,17 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
                 <p className="text-lg font-bold mb-4">
                   R${product.price.toFixed(2)}
                 </p>
-                <p className="mb-4">{product.description}</p>
+                <div className="mb-4 text-left">
+                  {product.description.split('\n').map((line, index) => (
+                    line.trim().startsWith('-') ? (
+                      <li key={index} className="ml-5 list-disc">
+                        {line.trim().substring(1).trim()}
+                      </li>
+                    ) : (
+                      <p key={index}>{line.trim()}</p>
+                    )
+                  ))}
+                </div>
                 <p className="text-sm text-gray-500 mb-4">
                   {product.quantity > 0 
                     ? `${product.quantity} unidade${product.quantity > 1 ? 's' : ''} disponíve${product.quantity > 1 ? 'is' : 'l'}`
