@@ -15,12 +15,11 @@ const SuccessPage: React.FC = () => {
         const external_reference = router.query.external_reference;
         if (!external_reference) return;
 
-        const response = await fetch("/api/payments/update_stock", {
+        const response = await fetch(`/api/payments/update_stock?external_reference=${external_reference}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ external_reference })
+          }
         });
 
         if (!response.ok) {
