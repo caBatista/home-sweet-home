@@ -19,7 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    addToCart(product);
+    addToCart(product, 1);
   };
 
   return (
@@ -40,7 +40,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               />
             </div>
           </div>
-          <p className="text-lg font-bold mb-2">R${product.price.toFixed(2)}</p>
+          <p className="text-lg font-bold mt-4 mb-2">R${product.price.toFixed(2)}</p>
           <p className="text-sm text-gray-500 mb-2">
             {product.quantity > 0 
               ? `${product.quantity} disponíve${product.quantity > 1 ? 'is' : 'l'}`

@@ -1,18 +1,20 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { Product } from "types";
+import { CartItem } from "types/cart";
 import { toast } from "sonner";
 
 interface CartContextType {
-  cart: Product[];
-  addToCart: (product: Product) => void;
+  cart: CartItem[];
+  addToCart: (product: Product, quantity: number) => void;
   removeFromCart: (index: number) => void;
+  updateQuantity: (index: number, quantity: number) => void;
   clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -23,24 +25,54 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const updateLocalStorage = useCallback((newCart: Product[]) => {
+  const updateLocalStorage = useCallback((newCart: CartItem[]) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("cart", JSON.stringify(newCart));
     }
   }, []);
 
-  const addToCart = (product: Product) => {
-    const currentQuantityInCart = cart.filter(item => item.id === product.id).length;
+  const addToCart = (product: Product, quantity: number) => {
+    const existingItemIndex = cart.findIndex(item => item.product.id === product.id);
 
-    if (currentQuantityInCart >= product.quantity) {
+    if (existingItemIndex !== -1) {
+      const newQuantity = cart[existingItemIndex].quantity + quantity;
+      if (newQuantity > product.quantity) {
+        toast.error("Quantidade máxima atingida para este produto");
+        return;
+      }
+      const newCart = [...cart];
+      newCart[existingItemIndex].quantity = newQuantity;
+      setCart(newCart);
+      updateLocalStorage(newCart);
+    } else {
+      if (quantity > product.quantity) {
+        toast.error("Quantidade máxima atingida para este produto");
+        return;
+      }
+      const newCart = [...cart, { product, quantity }];
+      setCart(newCart);
+      updateLocalStorage(newCart);
+    }
+    toast.success("Produto adicionado ao carrinho");
+  };
+
+  const updateQuantity = (index: number, quantity: number) => {
+    const newCart = [...cart];
+    const item = newCart[index];
+    
+    if (quantity > item.product.quantity) {
       toast.error("Quantidade máxima atingida para este produto");
       return;
     }
+    
+    if (quantity <= 0) {
+      removeFromCart(index);
+      return;
+    }
 
-    const newCart = [...cart, product];
+    newCart[index] = { ...item, quantity };
     setCart(newCart);
     updateLocalStorage(newCart);
-    toast.success("Produto adicionado ao carrinho");
   };
 
   const removeFromCart = (index: number) => {
@@ -55,7 +87,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [updateLocalStorage]);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}>
       {children}
     </CartContext.Provider>
   );

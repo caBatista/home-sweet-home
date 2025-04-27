@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useCart } from "../contexts/cart-context";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
-import { Product } from "types";
 import {
   Sheet,
   SheetContent,
@@ -19,8 +28,9 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ open, onClose }) => {
-  const { cart, removeFromCart } = useCart();
+  const { cart, removeFromCart, updateQuantity } = useCart();
   const [isClient, setIsClient] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState<{ index: number; name: string } | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -33,11 +43,11 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
       return;
     }
 
-    const checkoutItems = cart.map(product => ({
-      id: product.id,
-      title: product.name,
-      unit_price: product.price,
-      quantity: 1
+    const checkoutItems = cart.map(item => ({
+      id: item.product.id,
+      title: item.product.name,
+      unit_price: item.product.price,
+      quantity: item.quantity
     }));
 
     fetch("/api/checkout", {
@@ -86,25 +96,57 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
           <>
             <div className="flex-1 overflow-y-auto">
               <ul className="divide-y divide-gray-200">
-                {cart.map((product: Product, index: number) => (
+                {cart.map((item, index) => (
                   <li key={index} className="py-4 flex justify-between items-center">
-                    <div className="flex items-center">
+                    <div className="flex items-start gap-4 flex-1 min-w-0 ml-4">
                       <img
-                        src={product.imagesUrl[0]}
-                        alt={product.name}
-                        className="w-12 h-12 rounded-md object-cover ml-4 mr-4"
+                        src={item.product.imagesUrl[0]}
+                        alt={item.product.name}
+                        className="w-12 h-12 rounded-md object-cover flex-shrink-0"
                       />
-                      <span className="text-foreground">{product.name}</span>
+                      <div className="flex flex-col min-w-0 flex-1">
+                        <div className="overflow-hidden">
+                          <span className="block overflow-hidden text-ellipsis whitespace-nowrap text-foreground">{item.product.name}</span>
+                        </div>
+                        <div className="flex items-center mt-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 text-foreground"
+                            onClick={() => {
+                              if (item.quantity === 1) {
+                                setItemToRemove({ index, name: item.product.name });
+                              } else {
+                                updateQuantity(index, item.quantity - 1);
+                              }
+                            }}
+                          >
+                            -
+                          </Button>
+                          <span className="mx-2 text-foreground min-w-[2rem] text-center">
+                            {item.quantity}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 text-foreground"
+                            onClick={() => updateQuantity(index, item.quantity + 1)}
+                            disabled={item.quantity >= item.product.quantity}
+                          >
+                            +
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <span className="text-foreground font-semibold mr-4">
-                        R${product.price.toFixed(2)}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-foreground font-semibold">
+                        R${(item.product.price * item.quantity).toFixed(2)}
                       </span>
                       <Button 
                         variant="ghost" 
                         size="icon"
-                        onClick={() => removeFromCart(index)}
-                        className="text-foreground hover:text-gray-400"
+                        onClick={() => setItemToRemove({ index, name: item.product.name })}
+                        className="text-muted-foreground hover:text-foreground"
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -119,7 +161,7 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
                 <div className="flex justify-between mb-4 text-foreground">
                   <span className="font-medium">Total</span>
                   <span className="font-bold">
-                    R${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}
+                    R${cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0).toFixed(2)}
                   </span>
                 </div>
                 <Button className="w-full" onClick={handleCheckout}>
@@ -130,6 +172,29 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
           </>
         )}
       </SheetContent>
+      <AlertDialog open={itemToRemove !== null} onOpenChange={() => setItemToRemove(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">Remover item</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              Remover "{itemToRemove?.name}" do carrinho?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="text-muted-foreground">Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (itemToRemove) {
+                  removeFromCart(itemToRemove.index);
+                }
+                setItemToRemove(null);
+              }}
+            >
+              Remover
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Sheet>
   );
 };

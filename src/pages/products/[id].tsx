@@ -46,8 +46,10 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
     return <div>Product not found</div>;
   }
 
+  const [quantity, setQuantity] = useState(1);
+
   const handleAddToCart = () => {
-    addToCart(product as Product);
+    addToCart(product as Product, quantity);
   };
 
   return (
@@ -103,13 +105,40 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
                 <p className="text-lg font-bold mb-4">
                   R${product.price.toFixed(2)}
                 </p>
-                <Button
-                  className="mt-4 mb-10 add-to-cart-button"
-                  onClick={handleAddToCart}
-                  disabled={product.quantity === 0}
-                >
-                  {product.quantity === 0 ? 'Indisponível' : 'Adicionar ao carrinho'}
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-4 items-center mb-10">
+                  {product.quantity > 1 && (
+                    <div className="flex items-center">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-10 w-10 text-foreground"
+                        onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                        disabled={quantity <= 1}
+                      >
+                        -
+                      </Button>
+                      <span className="mx-4 text-foreground min-w-[2rem] text-center font-medium">
+                        {quantity}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-10 w-10 text-foreground"
+                        onClick={() => setQuantity(prev => Math.min(product.quantity, prev + 1))}
+                        disabled={quantity >= product.quantity}
+                      >
+                        +
+                      </Button>
+                    </div>
+                  )}
+                  <Button
+                    className={`add-to-cart-button ${product.quantity <= 1 ? "w-full" : "flex-1"}`}
+                    onClick={handleAddToCart}
+                    disabled={product.quantity === 0}
+                  >
+                    {product.quantity === 0 ? 'Indisponível' : 'Adicionar ao carrinho'}
+                  </Button>
+                </div>
               </div>
             </div>
           </CardContent>
