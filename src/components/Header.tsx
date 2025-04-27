@@ -89,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
         </div>
       </nav>
 
-      <Sheet open={isMobileMenuOpen} onOpenChange={toggleMobileMenu}>
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent
           side="left"
           className="md:hidden"
@@ -127,7 +127,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchTermChange }) => {
         </SheetContent>
       </Sheet>
 
-      <Cart open={isCartOpen} onClose={toggleCart} />
+      <Cart open={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 };

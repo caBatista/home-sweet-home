@@ -9,6 +9,8 @@ const DonateSection: React.FC = () => {
 
   const handleDonate = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     const checkoutItem = [{
       title: 'Doação',
@@ -16,26 +18,30 @@ const DonateSection: React.FC = () => {
       quantity: 1
     }];
 
-    fetch("/api/checkout", {
-      method: "POST",
-      headers: {
-      "Content-Type": "application/json"
-      },
-      body: JSON.stringify(checkoutItem)
-    })
-    .then(res => res.json())
-    .then(data => {
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(checkoutItem)
+      });
+      
+      const data = await response.json();
+      
       if (data && data.init_point) {
         window.location.href = data.init_point;
       } else {
         console.error("Invalid response format:", data);
-        alert("Erro ao processar pagamento. Por favor, tente novamente.");
+        setError("Erro ao processar pagamento. Por favor, tente novamente.");
       }
-    })
-        .catch(error => {
-    console.error("Erro ao criar checkout:", error);
-    });
-  }
+    } catch (error) {
+      console.error("Erro ao criar checkout:", error);
+      setError("Erro ao processar pagamento. Por favor, tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto max-w-2xl py-8">
