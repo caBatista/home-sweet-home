@@ -55,10 +55,10 @@ const PendingPage: React.FC = () => {
     }
     
     return (
-      <>
+      <div className="flex flex-col items-center gap-2">
+        <span>Seu pagamento está em processamento. Aguarde a confirmação</span>
         <Spinner className="w-6 h-6" />
-        Seu pagamento está em processamento. Aguarde a confirmação
-      </>
+      </div>
     );
   };
 
