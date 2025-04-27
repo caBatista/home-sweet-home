@@ -15,12 +15,19 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
+
+  const remainingStock = (() => {
+    const cartItem = cart.find(item => item.product.id === product.id);
+    return cartItem ? product.quantity - cartItem.quantity : product.quantity;
+  })();
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    addToCart(product, 1);
+    if (remainingStock > 0) {
+      addToCart(product, 1);
+    }
   };
 
   return (
@@ -43,17 +50,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
           <p className="text-lg font-bold mt-4 mb-2">R${product.price.toFixed(2)}</p>
           <p className="text-sm text-gray-500 mb-2">
-            {product.quantity > 0 
-              ? `${product.quantity} disponíve${product.quantity > 1 ? 'is' : 'l'}`
+            {remainingStock > 0 
+              ? `${remainingStock} disponíve${remainingStock > 1 ? 'is' : 'l'}`
               : 'Produto indisponível'
             }
           </p>
           <Button 
             className="mt-2" 
             onClick={handleAddToCart}
-            disabled={product.quantity === 0}
+            disabled={remainingStock === 0}
           >
-            {product.quantity === 0 ? 'Indisponível' : 'Adicionar ao carrinho'}
+            {remainingStock === 0 ? 'Indisponível' : 'Adicionar ao carrinho'}
           </Button>
         </CardContent>
       </Card>

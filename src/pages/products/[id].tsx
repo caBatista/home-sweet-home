@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
 
   if (!product) {
     return <div>Product not found</div>;
@@ -48,8 +48,15 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
 
   const [quantity, setQuantity] = useState(1);
 
+  const remainingStock = (() => {
+    const cartItem = cart.find(item => item.product.id === product.id);
+    return cartItem ? product.quantity - cartItem.quantity : product.quantity;
+  })();
+
   const handleAddToCart = () => {
-    addToCart(product as Product, quantity);
+    if (remainingStock >= quantity) {
+      addToCart(product as Product, quantity);
+    }
   };
 
   return (
@@ -97,8 +104,8 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
                   ))}
                 </div>
                 <p className="text-sm text-gray-500 mb-4">
-                  {product.quantity > 0 
-                    ? `${product.quantity} unidade${product.quantity > 1 ? 's' : ''} disponíve${product.quantity > 1 ? 'is' : 'l'}`
+                  {remainingStock > 0 
+                    ? `${remainingStock} unidade${remainingStock > 1 ? 's' : ''} disponíve${remainingStock > 1 ? 'is' : 'l'}`
                     : 'Produto indisponível'
                   }
                 </p>
@@ -106,7 +113,7 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
                   R${product.price.toFixed(2)}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 items-center mb-10">
-                  {product.quantity > 1 && (
+                  {remainingStock > 1 && (
                     <div className="flex items-center">
                       <Button
                         variant="outline"
@@ -124,19 +131,19 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
                         variant="outline"
                         size="icon"
                         className="h-10 w-10 text-foreground"
-                        onClick={() => setQuantity(prev => Math.min(product.quantity, prev + 1))}
-                        disabled={quantity >= product.quantity}
+                        onClick={() => setQuantity(prev => Math.min(remainingStock, prev + 1))}
+                        disabled={quantity >= remainingStock}
                       >
                         +
                       </Button>
                     </div>
                   )}
                   <Button
-                    className={`add-to-cart-button ${product.quantity <= 1 ? "w-full" : "flex-1"}`}
+                    className={`add-to-cart-button ${remainingStock <= 1 ? "w-full" : "flex-1"}`}
                     onClick={handleAddToCart}
-                    disabled={product.quantity === 0}
+                    disabled={remainingStock === 0}
                   >
-                    {product.quantity === 0 ? 'Indisponível' : 'Adicionar ao carrinho'}
+                    {remainingStock === 0 ? 'Indisponível' : 'Adicionar ao carrinho'}
                   </Button>
                 </div>
               </div>

@@ -33,22 +33,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (product: Product, quantity: number) => {
     const existingItemIndex = cart.findIndex(item => item.product.id === product.id);
+    const currentInCart = existingItemIndex !== -1 ? cart[existingItemIndex].quantity : 0;
+    const newQuantity = currentInCart + quantity;
+
+    if (newQuantity > product.quantity) {
+      toast.error(`Quantidade máxima disponível é ${product.quantity}`);
+      return;
+    }
 
     if (existingItemIndex !== -1) {
-      const newQuantity = cart[existingItemIndex].quantity + quantity;
-      if (newQuantity > product.quantity) {
-        toast.error("Quantidade máxima atingida para este produto");
-        return;
-      }
       const newCart = [...cart];
       newCart[existingItemIndex].quantity = newQuantity;
       setCart(newCart);
       updateLocalStorage(newCart);
     } else {
-      if (quantity > product.quantity) {
-        toast.error("Quantidade máxima atingida para este produto");
-        return;
-      }
       const newCart = [...cart, { product, quantity }];
       setCart(newCart);
       updateLocalStorage(newCart);
@@ -61,7 +59,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const item = newCart[index];
     
     if (quantity > item.product.quantity) {
-      toast.error("Quantidade máxima atingida para este produto");
+      toast.error(`Quantidade máxima disponível é ${item.product.quantity}`);
       return;
     }
     
