@@ -9,7 +9,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   try {
     const products = await prisma.product.findMany({
       where: {
-        AND: [search ? { name: { contains: search as string } } : {}],
+        AND: [
+          search ? { name: { contains: search as string } } : {},
+          { active: true }
+        ],
       },
     });
     res.status(200).json(products);

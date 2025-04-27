@@ -49,22 +49,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ error: 'No items found in payment' });
         }
 
-        // Use a transaction to ensure both the stock update and payment record creation happen together
         await prisma.$transaction(async (prisma) => {
-            // Update stock for each item
             for (const item of items) {
                 const id = parseInt(item.id);
+                const currentProduct = await prisma.product.findUnique({
+                    where: { id }
+                });
+
+                if (!currentProduct) continue;
+
+                const newQuantity = currentProduct.quantity - (item.quantity ? parseInt(item.quantity) : 1);
                 await prisma.product.update({
                     where: { id },
                     data: {
-                        quantity: {
-                            decrement: item.quantity ? parseInt(item.quantity) : 1
-                        }
+                        quantity: newQuantity,
+                        active: newQuantity > 0
                     }
                 });
             }
 
-            // Record that this payment has been processed
             await prisma.processedPayment.create({
                 data: {
                     externalReference: external_reference as string

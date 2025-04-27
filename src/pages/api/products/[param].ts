@@ -6,7 +6,12 @@ const prisma = new PrismaClient();
 async function handleGetByCategory(category: string, res: NextApiResponse) {
   try {
     const products = await prisma.product.findMany({
-      where: { category },
+      where: { 
+        AND: [
+          { category },
+          { active: true }
+        ]
+      },
     });
     res.status(200).json(products);
   } catch (error) {
