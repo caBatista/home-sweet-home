@@ -3,31 +3,77 @@ import { Product } from "types";
 import { CartItem } from "types/cart";
 import { toast } from "sonner";
 
+const CART_VERSION = 1;
+const CART_KEY = "cart";
+const CART_VERSION_KEY = "cart_version";
+
 interface CartContextType {
   cart: CartItem[];
   addToCart: (product: Product, quantity: number) => void;
   removeFromCart: (index: number) => void;
   updateQuantity: (index: number, quantity: number) => void;
   clearCart: () => void;
+  isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const clearLocalStorage = () => {
+  try {
+    localStorage.removeItem(CART_KEY);
+    localStorage.removeItem(CART_VERSION_KEY);
+  } catch (error) {
+    console.error("Error clearing localStorage:", error);
+  }
+};
+
+const getInitialCart = () => {
+  if (typeof window === "undefined") return [];
+  
+  try {
+    const version = localStorage.getItem(CART_VERSION_KEY);
+    const savedCart = localStorage.getItem(CART_KEY);
+
+    if (!version || parseInt(version) !== CART_VERSION) {
+      clearLocalStorage();
+      localStorage.setItem(CART_VERSION_KEY, CART_VERSION.toString());
+      return [];
+    }
+
+    return savedCart ? JSON.parse(savedCart) : [];
+  } catch (error) {
+    console.error("Error reading cart from localStorage:", error);
+    clearLocalStorage();
+    return [];
+  }
+};
+
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedCart = localStorage.getItem("cart");
-      if (savedCart) {
-        setCart(JSON.parse(savedCart));
-      }
+    try {
+      const savedCart = getInitialCart();
+      setCart(savedCart);
+    } catch (error) {
+      console.error("Error initializing cart:", error);
+      setCart([]);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   const updateLocalStorage = useCallback((newCart: CartItem[]) => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("cart", JSON.stringify(newCart));
+      try {
+        localStorage.setItem(CART_KEY, JSON.stringify(newCart));
+        // Ensure version is set
+        localStorage.setItem(CART_VERSION_KEY, CART_VERSION.toString());
+      } catch (error) {
+        console.error("Error saving cart to localStorage:", error);
+        clearLocalStorage();
+      }
     }
   }, []);
 
@@ -85,7 +131,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [updateLocalStorage]);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, isLoading }}>
       {children}
     </CartContext.Provider>
   );

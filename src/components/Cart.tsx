@@ -28,13 +28,12 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ open, onClose }) => {
-  const { cart, removeFromCart, updateQuantity } = useCart();
-  const [isClient, setIsClient] = useState(false);
+  const { cart, removeFromCart, updateQuantity, isLoading } = useCart();
   const [itemToRemove, setItemToRemove] = useState<{ index: number; name: string } | null>(null);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  if (isLoading) {
+    return null;
+  }
 
   function handleCheckout(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     event.preventDefault();
@@ -69,10 +68,6 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
     .catch(error => {
       console.error("Erro ao criar checkout:", error);
     });
-  }
-
-  if (!isClient) {
-    return null;
   }
 
   return (
