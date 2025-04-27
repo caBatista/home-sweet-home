@@ -19,12 +19,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    event.stopPropagation();
     addToCart(product, 1);
   };
 
   return (
     <Link href={`/products/${product.id}`}>
-      <Card className="product-card hover:outline-2 hover:shadow-lg min-w-3xs">
+      <Card className="product-card hover:outline-2 hover:shadow-lg min-w-3xs [transition:opacity_.2s] active:opacity-60">
         <CardHeader className="h-[40px]">
           <div className="flex items-center justify-center">
             <CardTitle className="line-clamp-3 text-center">{product.name}</CardTitle>
