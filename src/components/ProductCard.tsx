@@ -31,12 +31,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-center items-center">
-            <img
-              src={product.imagesUrl[0]}
-              alt={product.name}
-              className="w-48 h-48 object-cover mb-4 rounded-xl"
-            />
+          <div className="flex justify-center items-center bg-white p-2 rounded-xl">
+            <div className="w-48 h-48 relative rounded-xl overflow-hidden">
+              <img
+                src={product.imagesUrl[0]}
+                alt={product.name}
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
           <p className="text-lg font-bold mb-2">R${product.price.toFixed(2)}</p>
           <p className="text-sm text-gray-500 mb-2">

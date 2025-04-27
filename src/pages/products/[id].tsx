@@ -57,28 +57,32 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
         <Card className="product-card">
           <CardContent>
             <div className="flex flex-col md:flex-row mt-10">
-              <div className="flex justify-center items-center md:w-1/2">
-                <Carousel className="w-64 mb-4">
-                  <CarouselContent>
-                    {product.imagesUrl.map((url, index) => (
-                      <CarouselItem key={index}>
-                        <img
-                          src={url}
-                          alt={`${product.name} - Image ${index + 1}`}
-                          className="w-64 h-64 object-cover rounded-xl"
-                        />
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
+              <div className="flex flex-col md:w-1/2 xl:w-3/5">
+                <CardTitle className="text-2xl mb-4 md:hidden px-4">{product.name}</CardTitle>
+                <div className="relative w-full max-w-2xl px-4">
+                  <Carousel className="w-full">
+                    <CarouselContent>
+                      {product.imagesUrl.map((url, index) => (
+                        <CarouselItem key={index}>
+                          <div className="flex justify-center items-center bg-white p-4 rounded-xl">
+                            <div className="w-full aspect-square relative rounded-xl overflow-hidden">
+                              <img
+                                src={url}
+                                alt={`${product.name} - Image ${index + 1}`}
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-2 hover:bg-white/80" />
+                    <CarouselNext className="right-2 hover:bg-white/80" />
+                  </Carousel>
+                </div>
               </div>
-              <div className="md:w-1/2 md:pl-8">
-                <CardTitle className="text-4xl mb-4">{product.name}</CardTitle>
-                <p className="text-lg font-bold mb-4">
-                  R${product.price.toFixed(2)}
-                </p>
+              <div className="md:w-1/2 xl:w-2/5 md:pl-8 mt-8 md:mt-0">
+                <CardTitle className="text-4xl mb-4 hidden md:block">{product.name}</CardTitle>
                 <div className="mb-4 text-left">
                   {product.description.split('\n').map((line, index) => (
                     line.trim().startsWith('-') ? (
@@ -95,6 +99,9 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
                     ? `${product.quantity} unidade${product.quantity > 1 ? 's' : ''} disponíve${product.quantity > 1 ? 'is' : 'l'}`
                     : 'Produto indisponível'
                   }
+                </p>
+                <p className="text-lg font-bold mb-4">
+                  R${product.price.toFixed(2)}
                 </p>
                 <Button
                   className="mt-4 mb-10 add-to-cart-button"
