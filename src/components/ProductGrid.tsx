@@ -22,11 +22,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({ searchTerm, category }) => {
   const router = useRouter();
   const { category: queryCategory } = router.query;
   const [sortBy, setSortBy] = useState<string>("default");
-
-  if (queryCategory === "donate") {
-    return <DonateSection />;
-  }
-
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,10 +37,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ searchTerm, category }) => {
         await Promise.all(
           data.map((p: Product) =>
             new Promise<void>((resolve) => {
-              const img = new Image()
-              img.src = p.imagesUrl[0]
-              img.onload = () => resolve()
-              img.onerror = () => resolve()
+              const img = new Image();
+              img.src = p.imagesUrl[0];
+              img.onload = () => resolve();
+              img.onerror = () => resolve();
             })
           )
         );
@@ -58,6 +53,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ searchTerm, category }) => {
 
     fetchProducts();
   }, [category, searchTerm]);
+
+  if (queryCategory === "donate") {
+    return <DonateSection />;
+  }
 
   const filteredProducts = Array.isArray(products)
     ? products.filter((product) =>
