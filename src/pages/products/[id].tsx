@@ -92,16 +92,25 @@ const ProductDetailPage: React.FC<{ product: Product | null }> = ({ product }) =
               </div>
               <div className="md:w-1/2 xl:w-2/5 md:pl-8 mt-8 md:mt-0">
                 <CardTitle className="text-4xl mb-4 hidden md:block">{product.name}</CardTitle>
-                <div className="mb-4 text-left">
-                  {product.description.split('\n').map((line, index) => (
-                    line.trim().startsWith('-') ? (
-                      <li key={index} className="ml-5 list-disc">
-                        {line.trim().substring(1).trim()}
-                      </li>
-                    ) : (
-                      <p key={index}>{line.trim()}</p>
-                    )
-                  ))}
+                <h3 className="text-xl font-semibold text-left">
+                  Sobre este produto
+                </h3>
+                <div className="mb-4 mt-3 text-left">
+                  {product.description.split('\n').map((line, index) => {
+                  const trimmed = line.trim();
+                  if (trimmed.startsWith('-')) {
+                    return (
+                    <li key={index} className="ml-5 list-disc">
+                      {trimmed.substring(1).trim()}
+                    </li>
+                    );
+                  }
+                  return (
+                    <p key={index} className={index !== 0 ? "mt-2" : ""}>
+                    {trimmed}
+                    </p>
+                  );
+                  })}
                 </div>
                 <p className="text-sm text-gray-500 mb-4">
                   {remainingStock > 0 

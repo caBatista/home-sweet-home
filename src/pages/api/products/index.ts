@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -7,14 +7,12 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const { search } = req.query;
 
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        AND: [
-          search ? { name: { contains: search as string } } : {},
-          { active: true }
-        ],
-      },
-    });
+    const products = await prisma.$queryRaw`
+      SELECT * FROM "Product"
+      WHERE active = true
+      ${search ? Prisma.sql`AND name ILIKE ${`%${search}%`}` : Prisma.sql``}
+      ORDER BY RANDOM()
+    `;
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ error: `Failed to fetch products: ${error}` });
