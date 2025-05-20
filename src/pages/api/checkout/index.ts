@@ -18,10 +18,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const baseUrl = process.env.NEXT_PUBLIC_URL!;
         const externalReference = crypto.randomUUID();
 
-        const items = req.body;
+        const { items, payer } = req.body;
         const result = await preference.create({
             body: {
                 items: items,
+                payer: payer,
                 back_urls: {
                     success: `${baseUrl}/payment/success`,
                     pending: `${baseUrl}/payment/pending`,
