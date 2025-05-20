@@ -27,3 +27,8 @@ model ProcessedPayment {
   processedAt       DateTime @default(now())
 }
 
+model WebhookEvent {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  payload   Json
+}
