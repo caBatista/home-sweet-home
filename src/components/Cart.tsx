@@ -30,9 +30,6 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ open, onClose }) => {
   const { cart, removeFromCart, updateQuantity, isLoading } = useCart();
   const [itemToRemove, setItemToRemove] = useState<{ index: number; name: string } | null>(null);
-  const [showNameDialog, setShowNameDialog] = useState(false);
-  const [payerName, setPayerName] = useState("");
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   if (isLoading) {
     return null;
@@ -44,46 +41,33 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
       alert("Seu carrinho está vazio.");
       return;
     }
-    setShowNameDialog(true);
-  }
 
-  function handleNameConfirm() {
-    if (!payerName.trim()) return;
-    setCheckoutLoading(true);
     const checkoutItems = cart.map(item => ({
       id: item.product.id,
       title: item.product.name,
       unit_price: item.product.price,
       quantity: item.quantity
     }));
-    const payload = {
-      items: checkoutItems,
-      payer: { first_name: payerName }
-    };
+
     fetch("/api/checkout", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+      "Content-Type": "application/json"
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(checkoutItems)
     })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.init_point) {
-          window.location.href = data.init_point;
-        } else {
-          console.error("Invalid response format:", data);
-          alert("Erro ao processar pagamento. Por favor, tente novamente.");
-        }
-      })
-      .catch(error => {
-        console.error("Erro ao criar checkout:", error);
-      })
-      .finally(() => {
-        setCheckoutLoading(false);
-        setShowNameDialog(false);
-        setPayerName("");
-      });
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        console.error("Invalid response format:", data);
+        alert("Erro ao processar pagamento. Por favor, tente novamente.");
+      }
+    })
+    .catch(error => {
+      console.error("Erro ao criar checkout:", error);
+    });
   }
 
   return (
@@ -202,33 +186,6 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
               }}
             >
               Remover
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-      <AlertDialog open={showNameDialog} onOpenChange={setShowNameDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-foreground">Qual seu nome?</AlertDialogTitle>
-            <AlertDialogDescription className="text-muted-foreground">
-              Digite seu nome para continuar com o pagamento.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <input
-            className="w-full border rounded px-3 py-2 mt-4 text-foreground bg-background"
-            type="text"
-            placeholder="Seu nome"
-            value={payerName}
-            onChange={e => setPayerName(e.target.value)}
-            autoFocus
-          />
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setPayerName("")}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              disabled={!payerName.trim() || checkoutLoading}
-              onClick={handleNameConfirm}
-            >
-              {checkoutLoading ? 'Processando...' : 'Continuar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
